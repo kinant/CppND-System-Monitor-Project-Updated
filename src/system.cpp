@@ -44,7 +44,7 @@ vector<Process>& System::Processes() {
   }
 
   // sort the vector
-  
+  std::sort(processes_.begin(), processes_.end(), std::greater<Process>())
 
   return processes_; 
 }

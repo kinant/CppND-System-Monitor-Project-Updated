@@ -294,7 +294,7 @@ string LinuxParser::User(int pid) { return string(); }
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
 // https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat/16736599#16736599
-long int LinuxParser::UpTime(int pid) {
+long LinuxParser::CpuUtilization(int pid) {
   string line;
   string key; 
   string value;
@@ -307,7 +307,7 @@ long int LinuxParser::UpTime(int pid) {
 
   int counter = 0;
 
-  cout << endl;
+  //cout << endl;
 
   std::ifstream filestream(kProcDirectory + std::to_string(pid) + kStatFilename);
     
@@ -328,7 +328,15 @@ long int LinuxParser::UpTime(int pid) {
       }
     }
 
-  long int totaltime = utime + stime + cstime;
+  long uptime = UpTime();
+  long totaltime = utime + stime + cstime;
+  long seconds = uptime - (starttime / sysconf(_SC_CLK_TCK));
+  long cpu_usage = ((totaltime / sysconf(_SC_CLK_TCK)) / seconds );
 
-  return (totaltime / sysconf(_SC_CLK_TCK));
+  //cout << "UPTIME: " << uptime << endl;
+  //cout << "totaltime: " << totaltime << endl;
+  //cout << "seconds: " << seconds << endl;
+  //cout << "CPU USAGE: " << cpu_usage << endl;
+
+  return cpu_usage;
 }
