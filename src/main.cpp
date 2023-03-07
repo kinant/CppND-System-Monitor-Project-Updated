@@ -51,7 +51,7 @@ void PrintDebug(System &system, bool runForever = false) {
 int main() {
   System system;
 
-  // PrintDebug(system);
+  //PrintDebug(system);
 
   NCursesDisplay::Display(system);
 }

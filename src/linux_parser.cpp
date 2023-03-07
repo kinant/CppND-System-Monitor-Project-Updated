@@ -11,6 +11,11 @@ using std::string;
 using std::to_string;
 using std::vector;
 
+using LinuxParser::MemInfo;
+
+// DEBUG - REMOVE
+#include<iostream>
+
 // DONE: An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
   string line;
@@ -67,8 +72,62 @@ vector<int> LinuxParser::Pids() {
   return pids;
 }
 
+MemInfo hashIt(const string &input) {
+  if(input == LinuxParser::kMemTotal) return MemInfo::kMemTotal_;
+  if(input == LinuxParser::kMemFree) return MemInfo::kMemFree_;
+  if(input == LinuxParser::kMemBuffers) return MemInfo::kMemBuffers_;
+  if(input == LinuxParser::kMemCached) return MemInfo::kMemCached_;
+  if(input == LinuxParser::kMemSReclaimable) return MemInfo::kMemSReclaimable_;
+  if(input == LinuxParser::kMemShmem) return MemInfo::kMemShmem_;
+  return MemInfo::kNone_;
+}
+
+void SetMemInfoFromKey(const string &key, const string &value, std::map<int, float> &mapInfo) {
+  switch(hashIt(key)) {
+    case LinuxParser::MemInfo::kMemTotal_: mapInfo[MemInfo::kMemTotal_] = std::stof(value); break;
+    case LinuxParser::MemInfo::kMemFree_: mapInfo[MemInfo::kMemFree_] = std::stof(value); break;
+    case LinuxParser::MemInfo::kMemBuffers_: mapInfo[MemInfo::kMemBuffers_] = std::stof(value); break;
+    case LinuxParser::MemInfo::kMemCached_: mapInfo[MemInfo::kMemCached_] = std::stof(value); break;
+    case LinuxParser::MemInfo::kMemSReclaimable_: mapInfo[MemInfo::kMemSReclaimable_] = std::stof(value); break;
+    case LinuxParser::MemInfo::kMemShmem_: mapInfo[MemInfo::kMemShmem_] = std::stof(value); break;
+    case LinuxParser::MemInfo::kNone_: return;
+    default: return;
+  }
+}
+
 // TODO: Read and return the system memory utilization
-float LinuxParser::MemoryUtilization() { return 0.0; }
+// As per: https://knowledge.udacity.com/questions/658540
+// MemCached = Cached + SReclaimable - Shmem
+// (MemTotal - MemFree - (Buffers + MemCached))/MemTotal
+float LinuxParser::MemoryUtilization() {
+  string line;
+  string key;
+  string value;
+  string kbText;
+
+  std::map<int, float> memInfo;
+
+  std::ifstream filestream(kProcDirectory + kMeminfoFilename);
+  if (filestream.is_open()) {
+    
+    while (std::getline(filestream, line)) {
+      std::replace(line.begin(), line.end(), ':', ' ');
+      std::istringstream linestream(line);
+
+      // populate the map
+      while (linestream >> key >> value) {
+        SetMemInfoFromKey(key, value, memInfo);
+      }
+    }
+  }
+
+  float memCached = memInfo[MemInfo::kMemCached_] + memInfo[MemInfo::kMemSReclaimable_] - memInfo[MemInfo::kMemShmem_];
+  float memUtil = (memInfo[MemInfo::kMemTotal_] - memInfo[MemInfo::kMemFree_] - (
+    memInfo[MemInfo::kMemBuffers_] + memCached
+  )) / memInfo[MemInfo::kMemTotal_];
+
+  return memUtil;
+}
 
 // TODO: Read and return the system uptime
 long LinuxParser::UpTime() {

@@ -18,6 +18,24 @@ const std::string kVersionFilename{"/version"};
 const std::string kOSPath{"/etc/os-release"};
 const std::string kPasswordPath{"/etc/passwd"};
 
+const std::string kMemTotal{"MemTotal"};
+const std::string kMemFree{"MemFree"};
+const std::string kMemBuffers{"Buffers"};
+const std::string kMemCached{"Cached"};
+const std::string kMemSReclaimable{"SReclaimable"};
+const std::string kMemShmem{"Shmem"};
+
+// https://stackoverflow.com/questions/650162/why-cant-the-switch-statement-be-applied-to-strings
+enum MemInfo {
+  kMemTotal_,
+  kMemFree_,
+  kMemBuffers_,
+  kMemCached_,
+  kMemSReclaimable_,
+  kMemShmem_,
+  kNone_
+};
+
 // System
 float MemoryUtilization();
 long UpTime();
