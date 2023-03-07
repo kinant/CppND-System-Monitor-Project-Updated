@@ -20,7 +20,7 @@ class Process {
   // TODO: Declare any necessary private members
  private:
   int pid_;
-  bool bIsMarkedToDelete_;
+  float cpuUtil_;
 };
 
 #endif

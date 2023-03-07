@@ -14,6 +14,7 @@ using std::stol;
 
 using LinuxParser::MemInfo;
 using LinuxParser::CPUStates;
+using LinuxParser::ProcessTime;
 
 // DEBUG - REMOVE
 #include<iostream>
@@ -270,20 +271,14 @@ string LinuxParser::Uid(int pid) {
 
   std::ifstream filestream(kProcDirectory + std::to_string(pid) + kStatusFilename);
   
-  // std::cout << std::endl;
-  //std::cout << "Attempting to open: " << (kProcDirectory + std::to_string(pid) + kStatusFilename) << std::endl;
-
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
 
-      //cout << line << endl;
-
       if (linestream >> key >> value) {
         if(key==kProcessUid)
         {
-          //cout << "RETURNING ID: " << value;
           return value;
         }
       }
@@ -298,4 +293,42 @@ string LinuxParser::User(int pid) { return string(); }
 
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid) { return 0; }
+// https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat/16736599#16736599
+long int LinuxParser::UpTime(int pid) {
+  string line;
+  string key; 
+  string value;
+
+  float utime{0};
+  float stime{0};
+  float cutime{0};
+  float cstime{0};
+  float starttime{0};
+
+  int counter = 0;
+
+  cout << endl;
+
+  std::ifstream filestream(kProcDirectory + std::to_string(pid) + kStatFilename);
+    
+    if (filestream.is_open()) {
+      while (std::getline(filestream, line)) {
+        std::istringstream linestream(line);
+
+        while(linestream >> value) {
+          switch(counter) {
+            case ProcessTime::kUTime: utime = stol(value); break;
+            case ProcessTime::kSTime: stime = stol(value); break;
+            case ProcessTime::kCUTime: cutime = stol(value); break;
+            case ProcessTime::kCSTime: cstime = stol(value); break;
+            case ProcessTime::kStartTime: starttime = stol(value); break;
+          }
+          counter++;
+        }
+      }
+    }
+
+  long int totaltime = utime + stime + cstime;
+
+  return (totaltime / sysconf(_SC_CLK_TCK));
+}
