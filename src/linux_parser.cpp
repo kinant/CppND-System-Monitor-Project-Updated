@@ -72,7 +72,7 @@ vector<int> LinuxParser::Pids() {
   return pids;
 }
 
-MemInfo hashIt(const string &input) {
+MemInfo LinuxParser::HashIt(const string &input) {
   if(input == LinuxParser::kMemTotal) return MemInfo::kMemTotal_;
   if(input == LinuxParser::kMemFree) return MemInfo::kMemFree_;
   if(input == LinuxParser::kMemBuffers) return MemInfo::kMemBuffers_;
@@ -82,8 +82,8 @@ MemInfo hashIt(const string &input) {
   return MemInfo::kNone_;
 }
 
-void SetMemInfoFromKey(const string &key, const string &value, std::map<int, float> &mapInfo) {
-  switch(hashIt(key)) {
+void LinuxParser::SetMemInfoFromKey(const string &key, const string &value, std::map<int, float> &mapInfo) {
+  switch(HashIt(key)) {
     case LinuxParser::MemInfo::kMemTotal_: mapInfo[MemInfo::kMemTotal_] = std::stof(value); break;
     case LinuxParser::MemInfo::kMemFree_: mapInfo[MemInfo::kMemFree_] = std::stof(value); break;
     case LinuxParser::MemInfo::kMemBuffers_: mapInfo[MemInfo::kMemBuffers_] = std::stof(value); break;
@@ -103,7 +103,6 @@ float LinuxParser::MemoryUtilization() {
   string line;
   string key;
   string value;
-  string kbText;
 
   std::map<int, float> memInfo;
 
@@ -115,7 +114,7 @@ float LinuxParser::MemoryUtilization() {
       std::istringstream linestream(line);
 
       // populate the map
-      while (linestream >> key >> value) {
+      if (linestream >> key >> value) {
         SetMemInfoFromKey(key, value, memInfo);
       }
       
@@ -170,11 +169,40 @@ long LinuxParser::IdleJiffies() { return 0; }
 // TODO: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() { return {}; }
 
+int LinuxParser::GetSystemProcessInfo(const string &procKey) {
+  string key;
+  string value;
+  string line;
+
+  std::ifstream filestream(kProcDirectory + kStatFilename);
+  if (filestream.is_open()) {
+    while (std::getline(filestream, line)) {
+      std::istringstream linestream(line);
+
+      // populate the map
+      if (linestream >> key >> value) {
+
+        if(key == procKey) {
+          return std::stoi(value);
+        }
+        else if(key == procKey) {
+          return std::stoi(value);
+        }
+      }
+    }
+  }
+  return 0;
+}
+
 // TODO: Read and return the total number of processes
-int LinuxParser::TotalProcesses() { return 0; }
+int LinuxParser::TotalProcesses() { 
+  return GetSystemProcessInfo(kProcesses);
+}
 
 // TODO: Read and return the number of running processes
-int LinuxParser::RunningProcesses() { return 0; }
+int LinuxParser::RunningProcesses() { 
+  return GetSystemProcessInfo(kProcsRunning);
+}
 
 // TODO: Read and return the command associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
