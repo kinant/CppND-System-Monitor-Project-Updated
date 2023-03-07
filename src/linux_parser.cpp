@@ -118,6 +118,10 @@ float LinuxParser::MemoryUtilization() {
       while (linestream >> key >> value) {
         SetMemInfoFromKey(key, value, memInfo);
       }
+      
+      if(memInfo.size() == 6){
+        break;
+      }
     }
   }
 

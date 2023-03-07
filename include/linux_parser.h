@@ -25,6 +25,9 @@ const std::string kMemCached{"Cached"};
 const std::string kMemSReclaimable{"SReclaimable"};
 const std::string kMemShmem{"Shmem"};
 
+const std::string kProcesses{"processes"};
+const std::string kProcsRunning{"procs_running"};
+
 // https://stackoverflow.com/questions/650162/why-cant-the-switch-statement-be-applied-to-strings
 enum MemInfo {
   kMemTotal_,
