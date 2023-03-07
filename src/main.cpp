@@ -25,17 +25,18 @@ void PrintDebug(System &system, bool runForever = false) {
     std::cout << " " << std::endl;
     processes = system.Processes();
     std::cout << "Processes: " << std::endl;
+    std::cout << "Num. Processes: " << processes.size() << std::endl;
     std::cout << " " << std::endl;
 
-    for (int i = 0; i < n; ++i) {
-      std::cout << processes[i].Command() << std::endl;
-      std::cout << "Process ID " << processes[i].Pid() << std::endl;
-      std::cout << "User " << processes[i].User() << std::endl;
-      std::cout << "CPU utilization " << processes[i].CpuUtilization() * 100
-                << std::endl;
-      std::cout << "Memory utilization " << processes[i].Ram() << std::endl;
-      std::cout << "Process Uptime "
-                << Format::ElapsedTime(processes[i].UpTime()) << std::endl;
+    for (Process process : processes ) {
+      //std::cout << processes[i].Command() << std::endl;
+      std::cout << "Process ID " << process.Pid() << std::endl;
+      // std::cout << "User " << process.User() << std::endl;
+      //std::cout << "CPU utilization " << processes[i].CpuUtilization() * 100
+      //          << std::endl;
+      //std::cout << "Memory utilization " << processes[i].Ram() << std::endl;
+      //std::cout << "Process Uptime "
+      //          << Format::ElapsedTime(processes[i].UpTime()) << std::endl;
       std::cout << " " << std::endl;
     }
     std::this_thread::sleep_for(

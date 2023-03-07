@@ -17,6 +17,8 @@ using LinuxParser::CPUStates;
 
 // DEBUG - REMOVE
 #include<iostream>
+using std::cout;
+using std::endl;
 
 // DONE: An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
@@ -253,20 +255,47 @@ int LinuxParser::RunningProcesses() {
 
 // TODO: Read and return the command associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Command(int pid [[maybe_unused]]) { return string(); }
+string LinuxParser::Command(int pid) { return string(); }
 
 // TODO: Read and return the memory used by a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Ram(int pid [[maybe_unused]]) { return string(); }
+string LinuxParser::Ram(int pid) { return string(); }
 
 // TODO: Read and return the user ID associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Uid(int pid [[maybe_unused]]) { return string(); }
+string LinuxParser::Uid(int pid) {
+  string line;
+  string key;
+  string value;
+
+  std::ifstream filestream(kProcDirectory + std::to_string(pid) + kStatusFilename);
+  
+  // std::cout << std::endl;
+  //std::cout << "Attempting to open: " << (kProcDirectory + std::to_string(pid) + kStatusFilename) << std::endl;
+
+  if (filestream.is_open()) {
+    while (std::getline(filestream, line)) {
+      std::replace(line.begin(), line.end(), ':', ' ');
+      std::istringstream linestream(line);
+
+      //cout << line << endl;
+
+      if (linestream >> key >> value) {
+        if(key==kProcessUid)
+        {
+          //cout << "RETURNING ID: " << value;
+          return value;
+        }
+      }
+    }
+  }
+  return "";
+}
 
 // TODO: Read and return the user associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::User(int pid [[maybe_unused]]) { return string(); }
+string LinuxParser::User(int pid) { return string(); }
 
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid [[maybe_unused]]) { return 0; }
+long LinuxParser::UpTime(int pid) { return 0; }
