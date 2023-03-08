@@ -5,6 +5,8 @@
 #include <regex>
 #include <string>
 
+#define KB_TO_MB(kb)(kb/1024)
+
 namespace LinuxParser {
 // Paths
 const std::string kProcDirectory{"/proc/"};
@@ -31,6 +33,7 @@ const std::string kProcsRunning{"procs_running"};
 const std::string kProcCpu{"cpu"};
 
 const std::string kProcessUid("Uid");
+const std::string kProcessRam("VmSize");
 
 // https://stackoverflow.com/questions/650162/why-cant-the-switch-statement-be-applied-to-strings
 enum MemInfo {

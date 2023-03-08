@@ -34,7 +34,7 @@ void PrintDebug(System &system, bool runForever = false) {
       std::cout << "User " << process.User() << std::endl;
       // std::cout << "CPU utilization " << process.CpuUtilization() * 100
       //           << std::endl;
-      // std::cout << "Memory utilization " << processes[i].Ram() << std::endl;
+      std::cout << "Memory utilization " << process.Ram() << std::endl;
       // std::cout << "Process Uptime "
       //           << Format::ElapsedTime(processes[i].UpTime()) << std::endl;
       std::cout << " " << std::endl;
@@ -52,7 +52,7 @@ void PrintDebug(System &system, bool runForever = false) {
 int main() {
   System system;
 
-  // PrintDebug(system);
+  //PrintDebug(system);
 
   NCursesDisplay::Display(system);
 }
