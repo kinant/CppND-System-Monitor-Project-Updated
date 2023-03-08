@@ -272,18 +272,15 @@ string LinuxParser::Ram(int pid) {
 
   std::ifstream filestream(kProcDirectory + to_string(pid) + kStatusFilename);
 
-  if(filestream.is_open()) {
-
-    while(getline(filestream, line)){
+  if (filestream.is_open()) {
+    while (getline(filestream, line)) {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
 
-      if(linestream >> key >> value)
-      {
-        if(key == kProcessRam)
-        {
+      if (linestream >> key >> value) {
+        if (key == kProcessRam) {
           long mb = KB_TO_MB(stol(value));
-          return to_string(mb); 
+          return to_string(mb);
         }
       }
     }
@@ -306,10 +303,10 @@ string LinuxParser::Uid(int pid) {
       std::istringstream linestream(line);
 
       if (linestream >> key >> value) {
-        //cout << "LINE :" << line << endl;
-        //cout << "   key: " << key << endl;
-        //cout << "   value: " << value << endl;
-        
+        // cout << "LINE :" << line << endl;
+        // cout << "   key: " << key << endl;
+        // cout << "   value: " << value << endl;
+
         if (key == kProcessUid) {
           return value;
         }
@@ -347,6 +344,32 @@ string LinuxParser::User(int pid) {
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
 // https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat/16736599#16736599
+long LinuxParser::UpTime(int pid) {
+  string value;
+  string line;
+
+  int counter = 0;
+
+  std::ifstream filestream(kProcDirectory + to_string(pid) + kStatFilename);
+
+  if(filestream.is_open()) {
+    
+    while(getline(filestream, line)) {
+      std::istringstream linestream(line);
+
+      while(linestream >> value) {
+
+        if(counter == ProcessTime::kUpTime) {
+          return stol(value) / HERTZ;
+        }
+
+        counter++;
+      }
+    }
+  }
+  return 0;
+}
+/*
 long LinuxParser::CpuUtilization(int pid) {
   string line;
   string key;
@@ -404,3 +427,4 @@ long LinuxParser::CpuUtilization(int pid) {
 
   return cpu_usage;
 }
+*/

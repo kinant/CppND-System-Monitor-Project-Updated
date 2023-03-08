@@ -5,7 +5,8 @@
 #include <regex>
 #include <string>
 
-#define KB_TO_MB(kb)(kb/1024)
+#define KB_TO_MB(kb) (kb / 1024)
+#define HERTZ sysconf(_SC_CLK_TCK)
 
 namespace LinuxParser {
 // Paths
@@ -79,7 +80,8 @@ enum ProcessTime {
   kSTime = 14,
   kCUTime = 15,
   kCSTime = 16,
-  kStartTime = 21
+  kStartTime = 21,
+  kUpTime = 22
 };
 
 std::vector<std::string> CpuUtilization();
@@ -93,7 +95,7 @@ std::string Command(int pid);
 std::string Ram(int pid);
 std::string Uid(int pid);
 std::string User(int pid);
-long CpuUtilization(int pid);
+long UpTime(int pid);
 };  // namespace LinuxParser
 
 #endif
