@@ -269,21 +269,15 @@ string LinuxParser::Uid(int pid) {
   string value;
 
   std::ifstream filestream(kProcDirectory + std::to_string(pid) + kStatusFilename);
-  
-  // std::cout << std::endl;
-  //std::cout << "Attempting to open: " << (kProcDirectory + std::to_string(pid) + kStatusFilename) << std::endl;
 
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
 
-      //cout << line << endl;
-
       if (linestream >> key >> value) {
         if(key==kProcessUid)
         {
-          //cout << "RETURNING ID: " << value;
           return value;
         }
       }
