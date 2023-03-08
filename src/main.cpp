@@ -28,15 +28,15 @@ void PrintDebug(System &system, bool runForever = false) {
     std::cout << "Num. Processes: " << processes.size() << std::endl;
     std::cout << " " << std::endl;
 
-    for (Process process : processes ) {
-      //std::cout << processes[i].Command() << std::endl;
+    for (Process process : processes) {
+      // std::cout << processes[i].Command() << std::endl;
       std::cout << "Process ID " << process.Pid() << std::endl;
-      // std::cout << "User " << process.User() << std::endl;
-      std::cout << "CPU utilization " << process.CpuUtilization() * 100
-                << std::endl;
-      //std::cout << "Memory utilization " << processes[i].Ram() << std::endl;
-      //std::cout << "Process Uptime "
-      //          << Format::ElapsedTime(processes[i].UpTime()) << std::endl;
+      std::cout << "User " << process.User() << std::endl;
+      // std::cout << "CPU utilization " << process.CpuUtilization() * 100
+      //           << std::endl;
+      // std::cout << "Memory utilization " << processes[i].Ram() << std::endl;
+      // std::cout << "Process Uptime "
+      //           << Format::ElapsedTime(processes[i].UpTime()) << std::endl;
       std::cout << " " << std::endl;
     }
     std::this_thread::sleep_for(
@@ -52,7 +52,7 @@ void PrintDebug(System &system, bool runForever = false) {
 int main() {
   System system;
 
-  //PrintDebug(system);
+  // PrintDebug(system);
 
   NCursesDisplay::Display(system);
 }

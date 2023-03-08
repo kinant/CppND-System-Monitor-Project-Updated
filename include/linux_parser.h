@@ -45,7 +45,8 @@ enum MemInfo {
 
 // System
 MemInfo HashIt(const std::string &input);
-void SetMemInfoFromKey(const std::string &key, const std::string &value, std::map<int, float> &mapInfo);
+void SetMemInfoFromKey(const std::string &key, const std::string &value,
+                       std::map<int, float> &mapInfo);
 float MemoryUtilization();
 long UpTime();
 std::vector<int> Pids();

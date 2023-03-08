@@ -22,7 +22,7 @@ class System {
  private:
   Processor cpu_ = {};
   std::vector<Process> processes_ = {};
-  
+
   bool IsExistingProcess(int pid);
 };
 

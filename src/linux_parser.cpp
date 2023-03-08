@@ -7,17 +7,17 @@
 #include <vector>
 
 using std::stof;
+using std::stol;
 using std::string;
 using std::to_string;
 using std::vector;
-using std::stol;
 
-using LinuxParser::MemInfo;
 using LinuxParser::CPUStates;
+using LinuxParser::MemInfo;
 using LinuxParser::ProcessTime;
 
 // DEBUG - REMOVE
-#include<iostream>
+#include <iostream>
 using std::cout;
 using std::endl;
 
@@ -60,8 +60,8 @@ string LinuxParser::Kernel() {
 // BONUS: Update this to use std::filesystem
 vector<int> LinuxParser::Pids() {
   vector<int> pids;
-  DIR* directory = opendir(kProcDirectory.c_str());
-  struct dirent* file;
+  DIR *directory = opendir(kProcDirectory.c_str());
+  struct dirent *file;
   while ((file = readdir(directory)) != nullptr) {
     // Is this a directory?
     if (file->d_type == DT_DIR) {
@@ -78,25 +78,40 @@ vector<int> LinuxParser::Pids() {
 }
 
 MemInfo LinuxParser::HashIt(const string &input) {
-  if(input == LinuxParser::kMemTotal) return MemInfo::kMemTotal_;
-  if(input == LinuxParser::kMemFree) return MemInfo::kMemFree_;
-  if(input == LinuxParser::kMemBuffers) return MemInfo::kMemBuffers_;
-  if(input == LinuxParser::kMemCached) return MemInfo::kMemCached_;
-  if(input == LinuxParser::kMemSReclaimable) return MemInfo::kMemSReclaimable_;
-  if(input == LinuxParser::kMemShmem) return MemInfo::kMemShmem_;
+  if (input == LinuxParser::kMemTotal) return MemInfo::kMemTotal_;
+  if (input == LinuxParser::kMemFree) return MemInfo::kMemFree_;
+  if (input == LinuxParser::kMemBuffers) return MemInfo::kMemBuffers_;
+  if (input == LinuxParser::kMemCached) return MemInfo::kMemCached_;
+  if (input == LinuxParser::kMemSReclaimable) return MemInfo::kMemSReclaimable_;
+  if (input == LinuxParser::kMemShmem) return MemInfo::kMemShmem_;
   return MemInfo::kNone_;
 }
 
-void LinuxParser::SetMemInfoFromKey(const string &key, const string &value, std::map<int, float> &mapInfo) {
-  switch(HashIt(key)) {
-    case LinuxParser::MemInfo::kMemTotal_: mapInfo[MemInfo::kMemTotal_] = std::stof(value); break;
-    case LinuxParser::MemInfo::kMemFree_: mapInfo[MemInfo::kMemFree_] = std::stof(value); break;
-    case LinuxParser::MemInfo::kMemBuffers_: mapInfo[MemInfo::kMemBuffers_] = std::stof(value); break;
-    case LinuxParser::MemInfo::kMemCached_: mapInfo[MemInfo::kMemCached_] = std::stof(value); break;
-    case LinuxParser::MemInfo::kMemSReclaimable_: mapInfo[MemInfo::kMemSReclaimable_] = std::stof(value); break;
-    case LinuxParser::MemInfo::kMemShmem_: mapInfo[MemInfo::kMemShmem_] = std::stof(value); break;
-    case LinuxParser::MemInfo::kNone_: return;
-    default: return;
+void LinuxParser::SetMemInfoFromKey(const string &key, const string &value,
+                                    std::map<int, float> &mapInfo) {
+  switch (HashIt(key)) {
+    case LinuxParser::MemInfo::kMemTotal_:
+      mapInfo[MemInfo::kMemTotal_] = std::stof(value);
+      break;
+    case LinuxParser::MemInfo::kMemFree_:
+      mapInfo[MemInfo::kMemFree_] = std::stof(value);
+      break;
+    case LinuxParser::MemInfo::kMemBuffers_:
+      mapInfo[MemInfo::kMemBuffers_] = std::stof(value);
+      break;
+    case LinuxParser::MemInfo::kMemCached_:
+      mapInfo[MemInfo::kMemCached_] = std::stof(value);
+      break;
+    case LinuxParser::MemInfo::kMemSReclaimable_:
+      mapInfo[MemInfo::kMemSReclaimable_] = std::stof(value);
+      break;
+    case LinuxParser::MemInfo::kMemShmem_:
+      mapInfo[MemInfo::kMemShmem_] = std::stof(value);
+      break;
+    case LinuxParser::MemInfo::kNone_:
+      return;
+    default:
+      return;
   }
 }
 
@@ -113,7 +128,6 @@ float LinuxParser::MemoryUtilization() {
 
   std::ifstream filestream(kProcDirectory + kMeminfoFilename);
   if (filestream.is_open()) {
-    
     while (std::getline(filestream, line)) {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
@@ -122,24 +136,25 @@ float LinuxParser::MemoryUtilization() {
       if (linestream >> key >> value) {
         SetMemInfoFromKey(key, value, memInfo);
       }
-      
-      if(memInfo.size() == 6){
+
+      if (memInfo.size() == 6) {
         break;
       }
     }
   }
 
-  float memCached = memInfo[MemInfo::kMemCached_] + memInfo[MemInfo::kMemSReclaimable_] - memInfo[MemInfo::kMemShmem_];
-  float memUtil = (memInfo[MemInfo::kMemTotal_] - memInfo[MemInfo::kMemFree_] - (
-    memInfo[MemInfo::kMemBuffers_] + memCached
-  )) / memInfo[MemInfo::kMemTotal_];
+  float memCached = memInfo[MemInfo::kMemCached_] +
+                    memInfo[MemInfo::kMemSReclaimable_] -
+                    memInfo[MemInfo::kMemShmem_];
+  float memUtil = (memInfo[MemInfo::kMemTotal_] - memInfo[MemInfo::kMemFree_] -
+                   (memInfo[MemInfo::kMemBuffers_] + memCached)) /
+                  memInfo[MemInfo::kMemTotal_];
 
   return memUtil;
 }
 
 // TODO: Read and return the system uptime
 long LinuxParser::UpTime() {
-  
   string s_uptime;
   string line;
   long uptime = 0;
@@ -159,9 +174,7 @@ long LinuxParser::UpTime() {
 }
 
 // TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() {
-  return ActiveJiffies() + IdleJiffies();
-}
+long LinuxParser::Jiffies() { return ActiveJiffies() + IdleJiffies(); }
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
@@ -171,13 +184,10 @@ long LinuxParser::ActiveJiffies(int pid [[maybe_unused]]) { return 0; }
 long LinuxParser::ActiveJiffies() {
   vector<string> jiffies = CpuUtilization();
 
-  long activeJiffies = (stol(jiffies[CPUStates::kUser_]) 
-                      + stol(jiffies[CPUStates::kNice_])
-                      + stol(jiffies[CPUStates::kSystem_])
-                      + stol(jiffies[CPUStates::kIRQ_])
-                      + stol(jiffies[CPUStates::kSoftIRQ_])
-                      + stol(jiffies[CPUStates::kSteal_])
-                    );
+  long activeJiffies =
+      (stol(jiffies[CPUStates::kUser_]) + stol(jiffies[CPUStates::kNice_]) +
+       stol(jiffies[CPUStates::kSystem_]) + stol(jiffies[CPUStates::kIRQ_]) +
+       stol(jiffies[CPUStates::kSoftIRQ_]) + stol(jiffies[CPUStates::kSteal_]));
 
   return activeJiffies;
 }
@@ -186,9 +196,8 @@ long LinuxParser::ActiveJiffies() {
 long LinuxParser::IdleJiffies() {
   vector<string> jiffies = CpuUtilization();
 
-  long idleJiffies = (stol(jiffies[CPUStates::kIdle_]) 
-                      + stol(jiffies[CPUStates::kIOwait_])
-                    );
+  long idleJiffies =
+      (stol(jiffies[CPUStates::kIdle_]) + stol(jiffies[CPUStates::kIOwait_]));
 
   return idleJiffies;
 }
@@ -208,8 +217,8 @@ vector<string> LinuxParser::CpuUtilization() {
       std::istringstream linestream(line);
 
       if (linestream >> key) {
-        if(key == kProcCpu) {
-          while(linestream >> value) {
+        if (key == kProcCpu) {
+          while (linestream >> value) {
             values.push_back(value);
           }
         }
@@ -231,11 +240,9 @@ int LinuxParser::GetSystemProcessInfo(const string &procKey) {
 
       // populate the map
       if (linestream >> key >> value) {
-
-        if(key == procKey) {
+        if (key == procKey) {
           return std::stoi(value);
-        }
-        else if(key == procKey) {
+        } else if (key == procKey) {
           return std::stoi(value);
         }
       }
@@ -245,12 +252,10 @@ int LinuxParser::GetSystemProcessInfo(const string &procKey) {
 }
 
 // TODO: Read and return the total number of processes
-int LinuxParser::TotalProcesses() { 
-  return GetSystemProcessInfo(kProcesses);
-}
+int LinuxParser::TotalProcesses() { return GetSystemProcessInfo(kProcesses); }
 
 // TODO: Read and return the number of running processes
-int LinuxParser::RunningProcesses() { 
+int LinuxParser::RunningProcesses() {
   return GetSystemProcessInfo(kProcsRunning);
 }
 
@@ -269,20 +274,19 @@ string LinuxParser::Uid(int pid) {
   string key;
   string value;
 
-  std::ifstream filestream(kProcDirectory + std::to_string(pid) + kStatusFilename);
-<<<<<<< HEAD
-
-=======
-  
->>>>>>> master
+  std::ifstream filestream(kProcDirectory + std::to_string(pid) +
+                           kStatusFilename);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
 
       if (linestream >> key >> value) {
-        if(key==kProcessUid)
-        {
+        //cout << "LINE :" << line << endl;
+        //cout << "   key: " << key << endl;
+        //cout << "   value: " << value << endl;
+        
+        if (key == kProcessUid) {
           return value;
         }
       }
@@ -293,14 +297,38 @@ string LinuxParser::Uid(int pid) {
 
 // TODO: Read and return the user associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::User(int pid) { return string(); }
+string LinuxParser::User(int pid) {
+  string user;
+  string sPid;
+  char x;
+  string line;
+  string uid = Uid(pid);
+
+  std::ifstream filestream(kPasswordPath);
+
+  if (filestream.is_open()) {
+    while (std::getline(filestream, line)) {
+      std::replace(line.begin(), line.end(), ':', ' ');
+      std::istringstream linestream(line);
+
+      //cout << "USER LINE: " << line << endl;
+
+      if (linestream >> user >> x >> sPid) {
+        if (Uid(pid) == sPid) {
+          return user;
+        }
+      }
+    }
+  }
+  return "";
+}
 
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
 // https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat/16736599#16736599
 long LinuxParser::CpuUtilization(int pid) {
   string line;
-  string key; 
+  string key;
   string value;
 
   float utime{0};
@@ -311,36 +339,47 @@ long LinuxParser::CpuUtilization(int pid) {
 
   int counter = 0;
 
-  //cout << endl;
+  // cout << endl;
 
-  std::ifstream filestream(kProcDirectory + std::to_string(pid) + kStatFilename);
-    
-    if (filestream.is_open()) {
-      while (std::getline(filestream, line)) {
-        std::istringstream linestream(line);
+  std::ifstream filestream(kProcDirectory + std::to_string(pid) +
+                           kStatFilename);
 
-        while(linestream >> value) {
-          switch(counter) {
-            case ProcessTime::kUTime: utime = stol(value); break;
-            case ProcessTime::kSTime: stime = stol(value); break;
-            case ProcessTime::kCUTime: cutime = stol(value); break;
-            case ProcessTime::kCSTime: cstime = stol(value); break;
-            case ProcessTime::kStartTime: starttime = stol(value); break;
-          }
-          counter++;
+  if (filestream.is_open()) {
+    while (std::getline(filestream, line)) {
+      std::istringstream linestream(line);
+
+      while (linestream >> value) {
+        switch (counter) {
+          case ProcessTime::kUTime:
+            utime = stol(value);
+            break;
+          case ProcessTime::kSTime:
+            stime = stol(value);
+            break;
+          case ProcessTime::kCUTime:
+            cutime = stol(value);
+            break;
+          case ProcessTime::kCSTime:
+            cstime = stol(value);
+            break;
+          case ProcessTime::kStartTime:
+            starttime = stol(value);
+            break;
         }
+        counter++;
       }
     }
+  }
 
   long uptime = UpTime();
   long totaltime = utime + stime + cstime;
   long seconds = uptime - (starttime / sysconf(_SC_CLK_TCK));
-  long cpu_usage = ((totaltime / sysconf(_SC_CLK_TCK)) / seconds );
+  long cpu_usage = ((totaltime / sysconf(_SC_CLK_TCK)) / seconds);
 
-  //cout << "UPTIME: " << uptime << endl;
-  //cout << "totaltime: " << totaltime << endl;
-  //cout << "seconds: " << seconds << endl;
-  //cout << "CPU USAGE: " << cpu_usage << endl;
+  // cout << "UPTIME: " << uptime << endl;
+  // cout << "totaltime: " << totaltime << endl;
+  // cout << "seconds: " << seconds << endl;
+  // cout << "CPU USAGE: " << cpu_usage << endl;
 
   return cpu_usage;
 }
