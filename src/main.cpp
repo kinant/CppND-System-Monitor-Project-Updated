@@ -8,22 +8,24 @@
 
 #include "format.h"
 
-void PrintDebug(System &system, bool runForever = false) {
+void PrintDebug(System &sys, bool runForever = false) {
   int n = 1;
   std::vector<Process> processes;
   // NCursesDisplay::Display(system);
   while (true) {
+    system("cls");
+
     std::cout << "System Metrics" << std::endl;
-    std::cout << "CPU utilization " << system.Cpu().Utilization() * 100
+    std::cout << "CPU utilization " << sys.Cpu().Utilization() * 100
               << std::endl;
-    std::cout << "Memory utilization " << system.MemoryUtilization() * 100
+    std::cout << "Memory utilization " << sys.MemoryUtilization() * 100
               << std::endl;
-    std::cout << "Total Processes " << system.TotalProcesses() << std::endl;
-    std::cout << "Running Processes " << system.RunningProcesses() << std::endl;
-    std::cout << "System Uptime " << Format::ElapsedTime(system.UpTime())
+    std::cout << "Total Processes " << sys.TotalProcesses() << std::endl;
+    std::cout << "Running Processes " << sys.RunningProcesses() << std::endl;
+    std::cout << "System Uptime " << Format::ElapsedTime(sys.UpTime())
               << std::endl;
     std::cout << " " << std::endl;
-    processes = system.Processes();
+    processes = sys.Processes();
     std::cout << "Processes: " << std::endl;
     std::cout << "Num. Processes: " << processes.size() << std::endl;
     std::cout << " " << std::endl;
@@ -32,8 +34,8 @@ void PrintDebug(System &system, bool runForever = false) {
       // std::cout << processes[i].Command() << std::endl;
       std::cout << "Process ID " << process.Pid() << std::endl;
       std::cout << "User " << process.User() << std::endl;
-      // std::cout << "CPU utilization " << process.CpuUtilization() * 100
-      //           << std::endl;
+      std::cout << "CPU utilization " << process.CpuUtilization() * 100
+                << std::endl;
       std::cout << "Memory utilization " << process.Ram() << std::endl;
       // std::cout << "Process Uptime "
       //           << Format::ElapsedTime(processes[i].UpTime()) << std::endl;
@@ -52,7 +54,7 @@ void PrintDebug(System &system, bool runForever = false) {
 int main() {
   System system;
 
-  // PrintDebug(system);
+  //PrintDebug(system, true);
 
   NCursesDisplay::Display(system);
 }

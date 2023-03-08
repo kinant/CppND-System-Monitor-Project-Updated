@@ -266,8 +266,8 @@ string LinuxParser::Command(int pid) {
 
   std::ifstream filestream(kProcDirectory + to_string(pid) + kCmdlineFilename);
 
-  if(filestream.is_open()) {
-    if(getline(filestream, line)) {
+  if (filestream.is_open()) {
+    if (getline(filestream, line)) {
       return line;
     }
   }
@@ -363,14 +363,12 @@ long LinuxParser::UpTime(int pid) {
 
   std::ifstream filestream(kProcDirectory + to_string(pid) + kStatFilename);
 
-  if(filestream.is_open()) {
-    
-    while(getline(filestream, line)) {
+  if (filestream.is_open()) {
+    while (getline(filestream, line)) {
       std::istringstream linestream(line);
 
-      while(linestream >> value) {
-
-        if(counter == ProcessTime::kUpTime) {
+      while (linestream >> value) {
+        if (counter == ProcessTime::kUpTime) {
           return stol(value) / HERTZ;
         }
 
@@ -380,8 +378,8 @@ long LinuxParser::UpTime(int pid) {
   }
   return 0;
 }
-/*
-long LinuxParser::CpuUtilization(int pid) {
+
+float LinuxParser::CpuUtilization(int pid) {
   string line;
   string key;
   string value;
@@ -406,19 +404,19 @@ long LinuxParser::CpuUtilization(int pid) {
       while (linestream >> value) {
         switch (counter) {
           case ProcessTime::kUTime:
-            utime = stol(value);
+            utime = stof(value);
             break;
           case ProcessTime::kSTime:
-            stime = stol(value);
+            stime = stof(value);
             break;
           case ProcessTime::kCUTime:
-            cutime = stol(value);
+            cutime = stof(value);
             break;
           case ProcessTime::kCSTime:
-            cstime = stol(value);
+            cstime = stof(value);
             break;
           case ProcessTime::kStartTime:
-            starttime = stol(value);
+            starttime = stof(value);
             break;
         }
         counter++;
@@ -426,16 +424,21 @@ long LinuxParser::CpuUtilization(int pid) {
     }
   }
 
-  long uptime = UpTime();
-  long totaltime = utime + stime + cstime;
-  long seconds = uptime - (starttime / sysconf(_SC_CLK_TCK));
-  long cpu_usage = ((totaltime / sysconf(_SC_CLK_TCK)) / seconds);
+  float uptime = UpTime();
+  float totaltime = utime + stime + cutime + cstime;
+  float seconds = uptime - (starttime / HERTZ);
 
-  // cout << "UPTIME: " << uptime << endl;
+  if (seconds == 0) {
+    return 0;
+  }
+
+  float cpu_usage = ((float)(totaltime / (float)HERTZ) / (float)seconds);
+
+  // cout << endl;
+  // cout << "uptime: " << uptime << endl;
   // cout << "totaltime: " << totaltime << endl;
   // cout << "seconds: " << seconds << endl;
-  // cout << "CPU USAGE: " << cpu_usage << endl;
+  // cout << "cpu_usage: " << cpu_usage << endl;
 
   return cpu_usage;
 }
-*/
