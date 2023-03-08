@@ -424,6 +424,14 @@ float LinuxParser::CpuUtilization(int pid) {
     }
   }
 
+  //cout << endl;
+  //cout << "pid: " << pid << endl;
+  //cout << "utime: " << utime << endl;
+  //cout << "stime: " << stime << endl;
+  //cout << "cutime: " << cutime << endl;
+  //cout << "cstime: " << cstime << endl;
+  //cout << "starttime: " << starttime << endl;
+
   float uptime = UpTime();
   float totaltime = utime + stime + cutime + cstime;
   float seconds = uptime - (starttime / HERTZ);

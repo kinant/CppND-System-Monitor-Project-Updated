@@ -13,7 +13,7 @@ void PrintDebug(System &sys, bool runForever = false) {
   std::vector<Process> processes;
   // NCursesDisplay::Display(system);
   while (true) {
-    system("cls");
+    system("clear");
 
     std::cout << "System Metrics" << std::endl;
     std::cout << "CPU utilization " << sys.Cpu().Utilization() * 100
@@ -37,8 +37,8 @@ void PrintDebug(System &sys, bool runForever = false) {
       std::cout << "CPU utilization " << process.CpuUtilization() * 100
                 << std::endl;
       std::cout << "Memory utilization " << process.Ram() << std::endl;
-      // std::cout << "Process Uptime "
-      //           << Format::ElapsedTime(processes[i].UpTime()) << std::endl;
+      std::cout << "Process Uptime "
+                 << Format::ElapsedTime(process.UpTime()) << std::endl;
       std::cout << " " << std::endl;
     }
     std::this_thread::sleep_for(
