@@ -368,7 +368,7 @@ long LinuxParser::UpTime(int pid) {
       std::istringstream linestream(line);
 
       while (linestream >> value) {
-        if (counter == ProcessTime::kUpTime) {
+        if (counter == ProcessTime::kStartTime) {
           return stol(value) / HERTZ;
         }
 

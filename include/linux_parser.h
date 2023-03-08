@@ -81,7 +81,6 @@ enum ProcessTime {
   kCUTime = 15,
   kCSTime = 16,
   kStartTime = 21,
-  kUpTime = 22
 };
 
 std::vector<std::string> CpuUtilization();
