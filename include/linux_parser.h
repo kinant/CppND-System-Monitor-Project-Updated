@@ -36,6 +36,7 @@ const std::string kProcCpu{"cpu"};
 const std::string kProcessUid("Uid");
 const std::string kProcessRam("VmSize");
 
+// So we can use a switch statement and map for MemInfo
 // https://stackoverflow.com/questions/650162/why-cant-the-switch-statement-be-applied-to-strings
 enum MemInfo {
   kMemTotal_,
@@ -47,14 +48,15 @@ enum MemInfo {
   kNone_
 };
 
-// System
 MemInfo HashIt(const std::string &input);
 void SetMemInfoFromKey(const std::string &key, const std::string &value,
                        std::map<int, float> &mapInfo);
+
+// System
 float MemoryUtilization();
 long UpTime();
 std::vector<int> Pids();
-int GetSystemProcessInfo(const std::string &procKey);
+int GetSystemProcessorInfo(const std::string &procKey);
 int TotalProcesses();
 int RunningProcesses();
 std::string OperatingSystem();
@@ -86,7 +88,6 @@ enum ProcessTime {
 std::vector<std::string> CpuUtilization();
 long Jiffies();
 long ActiveJiffies();
-long ActiveJiffies(int pid);
 long IdleJiffies();
 
 // Processes
