@@ -369,7 +369,9 @@ long LinuxParser::UpTime(int pid) {
 
       while (linestream >> value) {
         if (counter == ProcessTime::kStartTime) {
-          return stol(value) / HERTZ;
+          // Wasn't updating, read this:
+          // https://knowledge.udacity.com/questions/756714
+          return (UpTime()) - (stol(value) / HERTZ);
         }
 
         counter++;
