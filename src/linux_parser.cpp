@@ -433,14 +433,11 @@ float LinuxParser::CpuUtilization(int pid) {
   //cout << "starttime: " << starttime << endl;
 
   float uptime = UpTime();
-  float totaltime = utime + stime + cutime + cstime;
-  float seconds = uptime - (starttime / HERTZ);
+  float totaltime_ticks = utime + stime + cutime + cstime;
+  float elapsedtime_ticks = (uptime * HERTZ) - starttime;
 
-  if (seconds == 0) {
-    return 0;
-  }
 
-  float cpu_usage = ((float)(totaltime / (float)HERTZ) / (float)seconds);
+  float cpu_usage = ((float) totaltime_ticks / float(elapsedtime_ticks));
 
   // cout << endl;
   // cout << "uptime: " << uptime << endl;
