@@ -14,8 +14,7 @@ using std::to_string;
 using std::vector;
 
 Process::Process(int pid)
-    : pid_(pid)
-    , cpuUtil_(LinuxParser::CpuUtilization(pid)) {}
+    : pid_(pid), cpuUtil_(LinuxParser::CpuUtilization(pid)) {}
 
 // DONE: Return this process's ID
 int Process::Pid() { return pid_; }

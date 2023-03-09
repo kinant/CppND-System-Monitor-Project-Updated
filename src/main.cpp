@@ -1,6 +1,6 @@
+#include "format.h"
 #include "ncurses_display.h"
 #include "system.h"
-#include "format.h"
 
 int main() {
   System system;

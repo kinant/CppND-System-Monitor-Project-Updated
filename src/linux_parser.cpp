@@ -385,16 +385,14 @@ float LinuxParser::CpuUtilization(int pid) {
 
   int counter = 0;
 
-  std::ifstream filestream(kProcDirectory + std::to_string(pid) + kStatFilename);
+  std::ifstream filestream(kProcDirectory + std::to_string(pid) +
+                           kStatFilename);
 
   if (filestream.is_open()) {
-    
     while (std::getline(filestream, line)) {
-      
       std::istringstream linestream(line);
 
       while (linestream >> value) {
-        
         switch (counter) {
           case ProcessTime::kUTime:
             utime = stof(value);
@@ -421,8 +419,7 @@ float LinuxParser::CpuUtilization(int pid) {
   float totaltime_ticks = utime + stime + cutime + cstime;
   float elapsedtime_ticks = (uptime * HERTZ) - starttime;
 
-
-  float cpu_usage = ((float) totaltime_ticks / float(elapsedtime_ticks));
+  float cpu_usage = ((float)totaltime_ticks / float(elapsedtime_ticks));
 
   return cpu_usage;
 }

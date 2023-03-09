@@ -12,7 +12,7 @@ string Format::ElapsedTime(long seconds) {
   int f_minutes;
   int f_seconds;
 
-  // calculate minutes, hours and seconds 
+  // calculate minutes, hours and seconds
   f_minutes = (seconds / 60) % 60;
   f_hours = (seconds / 60) / 60;
   f_seconds = seconds % 60;
