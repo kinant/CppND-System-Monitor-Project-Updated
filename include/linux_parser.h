@@ -5,6 +5,7 @@
 #include <regex>
 #include <string>
 
+// for conversions
 #define KB_TO_MB(kb) (kb / 1024)
 #define HERTZ sysconf(_SC_CLK_TCK)
 
@@ -21,6 +22,7 @@ const std::string kVersionFilename{"/version"};
 const std::string kOSPath{"/etc/os-release"};
 const std::string kPasswordPath{"/etc/passwd"};
 
+// For memory/mem info
 const std::string kMemTotal{"MemTotal"};
 const std::string kMemFree{"MemFree"};
 const std::string kMemBuffers{"Buffers"};
@@ -28,11 +30,13 @@ const std::string kMemCached{"Cached"};
 const std::string kMemSReclaimable{"SReclaimable"};
 const std::string kMemShmem{"Shmem"};
 
+// for processes
 const std::string kProcesses{"processes"};
 const std::string kProcsRunning{"procs_running"};
 
 const std::string kProcCpu{"cpu"};
 
+// for process
 const std::string kProcessUid("Uid");
 const std::string kProcessRam("VmSize");
 
